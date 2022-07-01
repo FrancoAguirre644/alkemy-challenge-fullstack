@@ -1,15 +1,25 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 
 import db from './database/config';
 
-const app: Express = express();
-const port = process.env.PORT || 5000;
+import authRouter from './routes/authRouter';
 
-app.get('/', (req: Request, res: Response) => {
-    res.json({ msg: 'Hello World!' });
-});
+const app: Express = express();
+
+// Middleware
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+
+// Routes
+
+app.use('/auth', authRouter);
+
+// Database connection
 
 (async () => {
 
@@ -23,4 +33,8 @@ app.get('/', (req: Request, res: Response) => {
 
 })();
 
-app.listen(port, () => console.log(`[server]: Server is running at https://localhost:${port}`));
+// Server listening
+
+const port = process.env.PORT || 5000;
+
+app.listen(port, () => console.log(`Server is running at https://localhost:${port}`));
