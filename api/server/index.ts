@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import db from './database/config';
+import './database/assocations';
 
 import authRouter from './routes/authRouter';
 import operationRouter from './routes/operationRouter';

@@ -1,14 +1,15 @@
 import express from 'express';
 import * as operationController from '../controllers/operationController';
+import auth from '../middleware/auth';
 
 const router = express.Router();
 
-router.get('/', operationController.getOperations);
+router.get('/', auth, operationController.getOperations);
 
-router.post('/', operationController.createOperation);
+router.post('/', auth, operationController.createOperation);
 
-router.put('/:id', operationController.updateOperation);
+router.put('/:id', auth, operationController.updateOperation);
 
-router.delete('/:id', operationController.deleteOperation);
+router.delete('/:id', auth, operationController.deleteOperation);
 
 export default router;
