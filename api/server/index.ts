@@ -6,6 +6,7 @@ dotenv.config();
 import db from './database/config';
 
 import authRouter from './routes/authRouter';
+import operationRouter from './routes/operationRouter';
 
 const app: Express = express();
 
@@ -18,6 +19,7 @@ app.use(cors());
 // Routes
 
 app.use('/auth', authRouter);
+app.use('/operations', operationRouter);
 
 // Database connection
 
