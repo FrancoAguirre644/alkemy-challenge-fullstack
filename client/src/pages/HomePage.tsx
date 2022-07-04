@@ -1,8 +1,11 @@
 import React from "react";
+import { Layout } from "../components/Layout";
 
 const HomePage: React.FC = () => {
     return (
-        <h1>HomePage!</h1>
+        <Layout>
+            <h1>HomePage!</h1>
+        </Layout>
     )
 }
 
