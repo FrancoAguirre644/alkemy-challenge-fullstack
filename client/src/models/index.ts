@@ -3,3 +3,8 @@ export interface User {
     fullname: string;
     email: string;
 }
+
+export interface IUserLogin {
+    email: string;
+    password: string;
+}

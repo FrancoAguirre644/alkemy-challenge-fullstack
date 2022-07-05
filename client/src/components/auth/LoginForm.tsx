@@ -4,11 +4,18 @@ import { TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system"
 import { useFormik } from "formik"
 import * as Yup from 'yup';
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/slices/authSlice";
+import { IUserLogin } from "../../models";
+import { AppDispatch } from "../../redux/store";
+import { ClientRoutes } from "../../routes/clientRoutes";
 
 
 const LoginForm = () => {
 
     const navigate = useNavigate();
+
+    const dispatch = useDispatch<AppDispatch>();
 
     const LoginSchema = Yup.object().shape({
         email: Yup.string().email('Must be a valid email.').max(255).required('Email is required.'),
@@ -22,7 +29,11 @@ const LoginForm = () => {
         },
         validationSchema: LoginSchema,
         onSubmit: () => {
-            alert('Login!');
+            dispatch(login(formik.values));
+            setTimeout(() => {
+                formik.setSubmitting(false);
+                navigate(ClientRoutes.HOME);
+            }, 1000);
         }
     });
 
