@@ -1,10 +1,18 @@
 import { LoadingButton } from "@mui/lab";
 import { Box, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
+import { register } from "../../redux/slices/authSlice";
+import { AppDispatch } from "../../redux/store";
+import { ClientRoutes } from "../../routes/clientRoutes";
 
 const RegisterForm: React.FC = () => {
+
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch<AppDispatch>();
 
     const registerSchema = Yup.object().shape({
         fullname: Yup.string().max(255).required('Name is required.'),
@@ -19,7 +27,14 @@ const RegisterForm: React.FC = () => {
             password: '',
         },
         validationSchema: registerSchema,
-        onSubmit: () => { alert('Register!') }
+        onSubmit: () => {
+            dispatch(register(formik.values));
+
+            setTimeout(() => {
+                formik.setSubmitting(false);
+                navigate(ClientRoutes.HOME);
+            }, 1000);
+        }
     });
 
     return (
@@ -79,6 +94,7 @@ const RegisterForm: React.FC = () => {
                 type="password"
                 value={formik.values.password}
                 variant="outlined"
+                autoComplete="off"
             />
             <Box sx={{ py: 2 }}>
                 <LoadingButton

@@ -6,7 +6,6 @@ import { useFormik } from "formik"
 import * as Yup from 'yup';
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/slices/authSlice";
-import { IUserLogin } from "../../models";
 import { AppDispatch } from "../../redux/store";
 import { ClientRoutes } from "../../routes/clientRoutes";
 
@@ -30,6 +29,7 @@ const LoginForm = () => {
         validationSchema: LoginSchema,
         onSubmit: () => {
             dispatch(login(formik.values));
+
             setTimeout(() => {
                 formik.setSubmitting(false);
                 navigate(ClientRoutes.HOME);
@@ -79,6 +79,7 @@ const LoginForm = () => {
                 type="password"
                 value={formik.values.password}
                 variant="outlined"
+                autoComplete="off"
             />
             <Box sx={{ py: 2 }}>
                 <LoadingButton

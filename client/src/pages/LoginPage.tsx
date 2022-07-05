@@ -12,6 +12,8 @@ const LoginPage: React.FC = () => {
 
     const { auth } = useSelector((state: RootState) => state);
 
+    if(auth.access_token) return <Navigate to={ClientRoutes.HOME} />
+
     return (
         <Layout>
             <Box

@@ -17,7 +17,13 @@ export const login = async (req: Request, res: Response) => {
 
         const access_token = generateAccessToken({ id: user.id });
 
-        return res.status(200).json({ access_token });
+        return res.status(200).json({
+            access_token,
+            user: {
+                fullname: user.fullname,
+                email: user.email
+            }
+        });
 
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
@@ -38,7 +44,13 @@ export const register = async (req: Request, res: Response) => {
 
         const access_token = generateAccessToken({ id: newUser.id });
 
-        return res.status(200).json({ access_token });
+        return res.status(200).json({
+            access_token,
+            user: {
+                fullname: newUser.fullname,
+                email: newUser.email
+            }
+        });
 
     } catch (error: any) {
         return res.status(500).json({ error: error.message });

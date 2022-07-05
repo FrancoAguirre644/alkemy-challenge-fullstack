@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IUserLogin, User } from "../../models";
+import { IUserLogin, IUserRegister, User } from "../../models";
 import * as authService from '../../services/authService';
 
 interface AuthState {
@@ -19,16 +19,31 @@ export const login = createAsyncThunk(
   }
 )
 
+export const register = createAsyncThunk(
+  "auth/register",
+  async (payload: IUserRegister) => {
+    const data = await authService.register(payload);
+    localStorage.setItem('logged', 'true');
+
+    return data;
+  }
+)
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(login.fulfilled, (state: AuthState, { payload }) => {
-      state.user = payload.user;
-      state.access_token = payload.access_token;
-    })
+    builder
+      .addCase(login.fulfilled, (state: AuthState, { payload }) => {
+        state.user = payload.user;
+        state.access_token = payload.access_token;
+      })
+      .addCase(register.fulfilled, (state: AuthState, { payload }) => {
+        state.user = payload.user;
+        state.access_token = payload.access_token;
+      })
   },
 });
 

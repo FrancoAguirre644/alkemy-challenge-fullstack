@@ -8,3 +8,9 @@ export interface IUserLogin {
     email: string;
     password: string;
 }
+
+export interface IUserRegister {
+    fullname: string;
+    email: string;
+    password: string;
+}
