@@ -29,6 +29,14 @@ export const register = createAsyncThunk(
   }
 )
 
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async () => {
+    localStorage.removeItem('logged');
+    return;
+  }
+)
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -44,16 +52,12 @@ export const authSlice = createSlice({
         state.user = payload.user;
         state.access_token = payload.access_token;
       })
+      .addCase(logout.fulfilled, (state: AuthState) => {
+        state.access_token = undefined;
+        state.user = undefined;
+      })
   },
 });
-
-/*
-
-// Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount, setCounter } =
-  counterSlice.actions;
-
-*/
 
 // You must export the reducer as follows for it to be able to be read by the store.
 export default authSlice.reducer;

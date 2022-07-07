@@ -1,25 +1,23 @@
-import { useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Navbar from './Navbar';
 
-interface DashboardLayoutProps {
+interface LayoutProps {
   children: React.ReactNode;
 }
 
-const DashboardLayoutRoot = styled('div')(({ theme }) => ({
+const LayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
   flex: '1 1 auto',
   maxWidth: '100%',
   paddingTop: 64,
 }));
 
-export const Layout: React.FC<DashboardLayoutProps> = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
+export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <>
-      <DashboardLayoutRoot>
+      <LayoutRoot>
         <Box
           sx={{
             display: 'flex',
@@ -32,8 +30,8 @@ export const Layout: React.FC<DashboardLayoutProps> = ({ children }) => {
         >
           {children}
         </Box>
-      </DashboardLayoutRoot>
-      <Navbar onSidebarOpen={() => setSidebarOpen(true)} />
+      </LayoutRoot>
+      <Navbar />
     </>
   );
 };

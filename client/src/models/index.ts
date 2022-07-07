@@ -14,3 +14,10 @@ export interface IUserRegister {
     email: string;
     password: string;
 }
+
+export interface IOperation {
+    id?: number;
+    description: string;
+    amount: number;
+    type: string;
+}

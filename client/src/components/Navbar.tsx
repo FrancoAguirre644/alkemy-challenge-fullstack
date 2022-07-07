@@ -1,61 +1,35 @@
 import styled from '@emotion/styled';
-import { AppBar, Avatar, Box, IconButton, Toolbar, Tooltip } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
+import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material';
+import AccountPopover from './AccountPopover';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const NavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[3]
 }));
 
-const Navbar = (props: any) => {
-  const { onSidebarOpen, ...other } = props;
+const Navbar = () => {
+
+  const { auth } = useSelector((state: RootState) => state);
 
   return (
-    <>
-      <NavbarRoot
-        {...other}>
-        <Toolbar
-          disableGutters
-          sx={{
-            minHeight: 64,
-            left: 0,
-            px: 2
-          }}
-        >
-          <IconButton
-            onClick={onSidebarOpen}
-            sx={{
-              display: {
-                xs: 'inline-flex',
-                lg: 'none'
-              }
-            }}
-          >
-            <MenuIcon fontSize="small" />
-          </IconButton>
-          <Tooltip title="Search">
-            <IconButton sx={{ ml: 1 }}>
-              <SearchIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Box sx={{ flexGrow: 1 }} />
-          <Tooltip title="Contacts">
-            <IconButton sx={{ ml: 1 }}>
-            </IconButton>
-          </Tooltip>
-          <Avatar
-            sx={{
-              height: 40,
-              width: 40,
-              ml: 1
-            }}
-            src="/static/images/avatars/avatar_1.png"
-          >
-          </Avatar>
-        </Toolbar>
-      </NavbarRoot>
-    </>
+    <NavbarRoot>
+      <Toolbar
+        disableGutters
+        sx={{
+          minHeight: 64,
+          left: 0,
+          px: 2
+        }}
+      >
+        <IconButton sx={{ ml: 1 }}>
+          <Avatar src='https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/b9ykawulidxbxjlso6h9' alt="logoURL" />
+        </IconButton>
+        <Box sx={{ flexGrow: 1 }} />
+        {auth.access_token && <AccountPopover />}
+      </Toolbar>
+    </NavbarRoot>
   );
 };
 
