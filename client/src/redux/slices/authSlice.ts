@@ -33,7 +33,24 @@ export const logout = createAsyncThunk(
   "auth/logout",
   async () => {
     localStorage.removeItem('logged');
-    return;
+    const res = await authService.refreshToken();
+
+    return res;
+
+  }
+)
+
+export const refreshToken = createAsyncThunk(
+  "auth/refresh-token",
+  async () => {
+    const loggedIn = localStorage.getItem("logged");
+
+    if (loggedIn) {
+      const res = await authService.refreshToken();
+      return res;
+    }
+
+    return {}
   }
 )
 
@@ -55,6 +72,10 @@ export const authSlice = createSlice({
       .addCase(logout.fulfilled, (state: AuthState) => {
         state.access_token = undefined;
         state.user = undefined;
+      })
+      .addCase(refreshToken.fulfilled, (state: AuthState, { payload }) => {
+        state.user = payload.user || undefined;
+        state.access_token = payload.access_token || undefined;
       })
   },
 });
