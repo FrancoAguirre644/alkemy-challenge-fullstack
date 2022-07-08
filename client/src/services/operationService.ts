@@ -7,3 +7,11 @@ export const getOperations = async (token: string) => {
 
     return res.data;
 }
+
+export const deleteOperation = async (id: number, token: string) => {
+    const res = await axios.delete(`/operations/${id}`, {
+        headers: { Authorization: token }
+    });
+
+    return res.data;
+}

@@ -1,19 +1,28 @@
-import { Box, Button, ButtonGroup, Card, Grid } from "@mui/material";
+import { Box, Button, ButtonGroup } from "@mui/material";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "../components/Layout";
 import OperationsTable from "../components/OperationsTable";
-import { RootState } from "../redux/store";
+import { AppDispatch, RootState } from "../redux/store";
+import { deleteOperation } from '../redux/slices/operationSlice';
 
 const HomePage: React.FC = () => {
 
     const { operations } = useSelector((state: RootState) => state);
+
+    const dispatch = useDispatch<AppDispatch>();
 
     const buttons = [
         <Button key="one">All</Button>,
         <Button key="two">Income</Button>,
         <Button key="three">Expense</Button>,
     ];
+
+    const handleDelete = (id: number) => {
+        if (window.confirm('Are you sure you want to delete this operation?')) {
+            dispatch(deleteOperation(id));
+        }
+    }
 
     return (
         <Layout>
@@ -31,7 +40,7 @@ const HomePage: React.FC = () => {
                     {buttons}
                 </ButtonGroup>
             </Box>
-            <OperationsTable operations={operations.data!} />
+            <OperationsTable operations={operations.data!} handleDelete={handleDelete} />
         </Layout>
     )
 }

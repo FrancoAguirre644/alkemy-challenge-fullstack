@@ -11,9 +11,10 @@ import { Chip } from '@mui/material';
 
 interface OperationsTableProps {
     operations: IOperation[];
+    handleDelete: (id: number) => void;
 }
 
-const OperationsTable: React.FC<OperationsTableProps> = ({ operations }) => {
+const OperationsTable: React.FC<OperationsTableProps> = ({ operations, handleDelete }) => {
     return (
         <TableContainer component={Paper} sx={{ maxWidth: 800 }}>
             <Table sx={{ minWidth: 800 }}>
@@ -32,7 +33,7 @@ const OperationsTable: React.FC<OperationsTableProps> = ({ operations }) => {
                                 {operation.description}
                             </TableCell>
                             <TableCell align="right">${operation.amount.toFixed(2)}</TableCell>
-                            <TableCell align="right"> 
+                            <TableCell align="right">
                                 <Chip label={operation.type}
                                     variant="outlined"
                                     color={
@@ -44,7 +45,11 @@ const OperationsTable: React.FC<OperationsTableProps> = ({ operations }) => {
                                 />
                             </TableCell>
                             <TableCell align="right">
-                                <DeleteOutlineIcon color="error" />
+                                <DeleteOutlineIcon 
+                                    color="error" 
+                                    style={{ 'cursor': 'pointer' }} 
+                                    onClick={() => handleDelete(operation.id!)}
+                                />
                             </TableCell>
                         </TableRow>
                     ))}

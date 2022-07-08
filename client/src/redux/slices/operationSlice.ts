@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IOperation } from "../../models";
 import * as operationService from '../../services/operationService';
 
+
 interface OperationState {
     data?: IOperation[];
     loading: boolean;
@@ -17,6 +18,14 @@ export const getOperations = createAsyncThunk(
     async (token: string) => {
         const data = await operationService.getOperations(token);
         return data.operations;
+    }
+)
+
+export const deleteOperation = createAsyncThunk(
+    "operations/deleteOperation",
+    async (id: number, { getState }) => {
+        await operationService.deleteOperation(id, getState().auth.access_token!);
+        return getState().operations.data?.filter(item => item.id !== id);;
     }
 )
 
