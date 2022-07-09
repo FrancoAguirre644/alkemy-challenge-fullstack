@@ -21,11 +21,19 @@ export const getOperations = createAsyncThunk(
     }
 )
 
+export const createOperation = createAsyncThunk(
+    "operations/createOperation",
+    async (operation: IOperation, { getState }) => {
+        const data = await operationService.createOperation(operation, getState().auth.access_token!);
+        return data.newOperation;
+    }
+)
+
 export const deleteOperation = createAsyncThunk(
     "operations/deleteOperation",
     async (id: number, { getState }) => {
         await operationService.deleteOperation(id, getState().auth.access_token!);
-        return getState().operations.data?.filter(item => item.id !== id);;
+        return id;
     }
 )
 
@@ -42,6 +50,14 @@ export const authSlice = createSlice({
             })
             .addCase(getOperations.pending, (state: OperationState) => {
                 state.loading = true;
+            })
+            .addCase(deleteOperation.fulfilled, (state: OperationState, { payload }) => {
+                state.data = state.data?.filter(item => item.id !== payload);
+                state.loading = false;
+            })
+            .addCase(createOperation.fulfilled, (state: OperationState, { payload }) => {
+                state.data = [payload, ...state.data!];
+                state.loading = false;
             })
     },
 });

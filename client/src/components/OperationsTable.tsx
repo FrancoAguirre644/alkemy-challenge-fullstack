@@ -12,9 +12,10 @@ import { Chip } from '@mui/material';
 interface OperationsTableProps {
     operations: IOperation[];
     handleDelete: (id: number) => void;
+    typeFilter: string;
 }
 
-const OperationsTable: React.FC<OperationsTableProps> = ({ operations, handleDelete }) => {
+const OperationsTable: React.FC<OperationsTableProps> = ({ operations, handleDelete, typeFilter }) => {
     return (
         <TableContainer component={Paper} sx={{ maxWidth: 800 }}>
             <Table sx={{ minWidth: 800 }}>
@@ -27,17 +28,17 @@ const OperationsTable: React.FC<OperationsTableProps> = ({ operations, handleDel
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {operations.map((operation) => (
-                        <TableRow key={operation.id}>
-                            <TableCell component="th" scope="row">
-                                {operation.description}
+                    {operations.filter(operation => typeFilter === "all" ? true : operation.type === typeFilter).map(filteredOperation => (
+                        <TableRow key={filteredOperation.id}>
+                            <TableCell component="th" scope="row" align="left">
+                                {filteredOperation.description}
                             </TableCell>
-                            <TableCell align="right">${operation.amount.toFixed(2)}</TableCell>
+                            <TableCell align="right">${filteredOperation.amount.toFixed(2)}</TableCell>
                             <TableCell align="right">
-                                <Chip label={operation.type}
+                                <Chip label={filteredOperation.type}
                                     variant="outlined"
                                     color={
-                                        operation.type == 'income' ?
+                                        filteredOperation.type == 'income' ?
                                             'success'
                                             :
                                             'error'
@@ -45,10 +46,10 @@ const OperationsTable: React.FC<OperationsTableProps> = ({ operations, handleDel
                                 />
                             </TableCell>
                             <TableCell align="right">
-                                <DeleteOutlineIcon 
-                                    color="error" 
-                                    style={{ 'cursor': 'pointer' }} 
-                                    onClick={() => handleDelete(operation.id!)}
+                                <DeleteOutlineIcon
+                                    color="error"
+                                    style={{ 'cursor': 'pointer' }}
+                                    onClick={() => handleDelete(filteredOperation.id!)}
                                 />
                             </TableCell>
                         </TableRow>

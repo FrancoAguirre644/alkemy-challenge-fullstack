@@ -1,7 +1,16 @@
 import axios from "axios";
+import { IOperation } from "../models";
 
 export const getOperations = async (token: string) => {
     const res = await axios.get(`/operations`, {
+        headers: { Authorization: token }
+    });
+
+    return res.data;
+}
+
+export const createOperation = async (operation: IOperation, token: string) => {
+    const res = await axios.post(`/operations`, operation, {
         headers: { Authorization: token }
     });
 
