@@ -29,6 +29,14 @@ export const createOperation = createAsyncThunk(
     }
 )
 
+export const updateOperation = createAsyncThunk(
+    "operations/updateOperation",
+    async (operation: IOperation, { getState }) => {
+        const data = await operationService.updateOperation(operation, getState().auth.access_token!);
+        return data.operationUpdated;
+    }
+)
+
 export const deleteOperation = createAsyncThunk(
     "operations/deleteOperation",
     async (id: number, { getState }) => {
@@ -51,12 +59,19 @@ export const authSlice = createSlice({
             .addCase(getOperations.pending, (state: OperationState) => {
                 state.loading = true;
             })
-            .addCase(deleteOperation.fulfilled, (state: OperationState, { payload }) => {
-                state.data = state.data?.filter(item => item.id !== payload);
-                state.loading = false;
-            })
             .addCase(createOperation.fulfilled, (state: OperationState, { payload }) => {
                 state.data = [payload, ...state.data!];
+                state.loading = false;
+            })
+            .addCase(updateOperation.fulfilled, (state: OperationState, { payload }) => {
+                console.log(payload)
+                state.data = state.data?.map(item =>
+                    item.id === payload.id ? payload : item
+                );
+                state.loading = false;
+            })
+            .addCase(deleteOperation.fulfilled, (state: OperationState, { payload }) => {
+                state.data = state.data?.filter(item => item.id !== payload);
                 state.loading = false;
             })
     },

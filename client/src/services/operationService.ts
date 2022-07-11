@@ -17,6 +17,14 @@ export const createOperation = async (operation: IOperation, token: string) => {
     return res.data;
 }
 
+export const updateOperation = async (operation: IOperation, token: string) => {
+    const res = await axios.put(`/operations/${operation.id}`, operation, {
+        headers: { Authorization: token }
+    });
+
+    return res.data;
+}
+
 export const deleteOperation = async (id: number, token: string) => {
     const res = await axios.delete(`/operations/${id}`, {
         headers: { Authorization: token }

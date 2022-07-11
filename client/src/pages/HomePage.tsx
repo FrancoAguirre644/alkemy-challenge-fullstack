@@ -1,11 +1,11 @@
-import { Box, Button, ButtonGroup, Card, CardActions, CardContent } from "@mui/material";
-import React, { useState } from "react";
+import { Box, Button, ButtonGroup, Card, CardContent, Divider, List, ListItemSecondaryAction, ListItemText, ListItemButton } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "../components/Layout";
 import OperationsTable from "../components/OperationsTable";
 import { AppDispatch, RootState } from "../redux/store";
-import { createOperation, deleteOperation } from '../redux/slices/operationSlice';
-import AddOperationDialog from "../components/AddOperationDialog";
+import { createOperation, deleteOperation, updateOperation } from '../redux/slices/operationSlice';
+import AddOrUpdateOperationDialog from "../components/AddOrUpdateOperationDialog";
 import { IOperation } from "../models";
 
 const HomePage: React.FC = () => {
@@ -14,7 +14,42 @@ const HomePage: React.FC = () => {
 
     const dispatch = useDispatch<AppDispatch>();
 
+    const [income, setIncome] = useState<number>(0);
+
+    const [outcome, setOutcome] = useState<number>(0);
+
+    const [total, setTotal] = useState<number>(0);
+
     const [typeFilter, setTypeFilter] = useState<string>("all");
+
+    useEffect(() => {
+        if (operations.data?.length) {
+            calculateTotal(operations.data);
+        }
+    }, [operations.data]);
+
+    const calculateTotal = (operations: IOperation[]) => {
+        let incomeSubTotal = 0;
+        let outcomeSubTotal = 0;
+
+        const total = operations.map((operation) => {
+
+            if (operation.type === "income") {
+                incomeSubTotal += operation.amount;
+                return operation.amount;
+            }
+
+            outcomeSubTotal += operation.amount;
+            return operation.amount;
+
+        });
+
+        setIncome(incomeSubTotal);
+
+        setOutcome(outcomeSubTotal);
+
+        setTotal(total.reduce((a, b) => a + b));
+    };
 
     const buttons = [
         <Button
@@ -46,8 +81,12 @@ const HomePage: React.FC = () => {
         }
     }
 
-    const handleCreate = (operation: IOperation) => {
-        dispatch(createOperation(operation));
+    const handleCreateOrUpdate = (operation: IOperation) => {
+        if (operation.id) {
+            dispatch(updateOperation(operation));
+        } else {
+            dispatch(createOperation(operation));
+        }
     }
 
     return (
@@ -66,13 +105,40 @@ const HomePage: React.FC = () => {
             >
                 <Card sx={{ width: 1 }}>
                     <CardContent>
-                        <ButtonGroup size="small" color="secondary" aria-label="small button group">
-                            {buttons}
-                        </ButtonGroup>
+                        <AddOrUpdateOperationDialog
+                            title="Add Operation"
+                            handleCreateOrUpdate={handleCreateOrUpdate}
+                        />
+                        <List dense>
+                            <ListItemButton>
+                                <ListItemText primary="Income:" />
+                                <ListItemSecondaryAction>
+                                    ${income.toFixed(2)}
+                                </ListItemSecondaryAction>
+                            </ListItemButton>
+                            <Divider />
+                            <ListItemButton>
+                                <ListItemText primary="Expense:" />
+                                <ListItemSecondaryAction >
+                                    ${outcome.toFixed(2)}
+                                </ListItemSecondaryAction>
+                            </ListItemButton>
+                            <Divider />
+                            <ListItemButton>
+                                <ListItemText primary="Total:" />
+                                <ListItemSecondaryAction >
+                                    ${total.toFixed(2)}
+                                </ListItemSecondaryAction>
+                            </ListItemButton>
+                        </List>
                     </CardContent>
                 </Card>
-                <AddOperationDialog title="Add Operation" handleCreate={handleCreate} />
-                <OperationsTable operations={operations.data!} handleDelete={handleDelete} typeFilter={typeFilter} />
+                <OperationsTable
+                    operations={operations.data!}
+                    handleDelete={handleDelete}
+                    handleCreateOrUpdate={handleCreateOrUpdate}
+                    typeFilter={typeFilter}
+                />
             </Box>
         </Layout>
     )

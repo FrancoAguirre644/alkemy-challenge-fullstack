@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import Button from '@mui/material/Button';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -8,10 +7,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { LoadingButton } from '@mui/lab';
 import { IOperation } from '../models';
+import { AddCircleOutline } from '@mui/icons-material';
 
 const OperationsTypes = [
     {
@@ -63,12 +64,13 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
     );
 };
 
-interface AddOperationDialogProps {
+interface AddOrUpdateOperationDialogProps {
     title: string;
-    handleCreate: (operation: IOperation) => void;
+    handleCreateOrUpdate: (operation: IOperation) => void;
+    operation?: IOperation;
 }
 
-const AddOperationDialog: React.FC<AddOperationDialogProps> = ({ title, handleCreate }) => {
+const AddOrUpdateOperationDialog: React.FC<AddOrUpdateOperationDialogProps> = ({ title, handleCreateOrUpdate, operation }) => {
 
     const [open, setOpen] = React.useState(false);
 
@@ -82,29 +84,45 @@ const AddOperationDialog: React.FC<AddOperationDialogProps> = ({ title, handleCr
 
     const addOperationSchema = Yup.object().shape({
         description: Yup.string().required('Description is required.'),
-        amount: Yup.number().min(1, 'Amount must be greater than or equal to 1').required('Amount is required.'),
+        amount: Yup.number().min(1, 'Amount must be greater than or equal to 1.').required('Amount is required.'),
         type: Yup.string().required('Type is required.'),
     });
 
     const formik = useFormik({
         initialValues: {
-            description: '',
-            amount: 0,
-            type: ''
+            description: operation?.description ? operation.description : '',
+            amount: operation?.amount ? operation.amount : 0,
+            type: operation?.type ? operation.type : ''
         },
         validationSchema: addOperationSchema,
         onSubmit: () => {
-            handleCreate(formik.values);
+            handleCreateOrUpdate(operation?.id ? { ...formik.values, id: operation.id } : formik.values);
             formik.setSubmitting(false);
             handleClose();
         }
     });
 
     return (
-        <div>
-            <Button variant="outlined" size='small' onClick={handleClickOpen} fullWidth>
-                {title}
-            </Button>
+        <>
+            {
+                operation?.id ?
+                    <ModeEditIcon
+                        color="inherit"
+                        style={{ 'cursor': 'pointer' }}
+                        onClick={handleClickOpen}
+                    />
+                    :
+                    <Button
+                        size='small'
+                        variant='outlined'
+                        startIcon={<AddCircleOutline />}
+                        onClick={handleClickOpen}
+                        fullWidth
+                    >
+                        {title}
+                    </Button>
+            }
+
             <BootstrapDialog
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
@@ -148,6 +166,7 @@ const AddOperationDialog: React.FC<AddOperationDialogProps> = ({ title, handleCr
                             onBlur={formik.handleBlur}
                             required
                             variant="outlined"
+                            disabled={operation?.id ? true : false}
                         >
                             <InputLabel id="demo-simple-select-standard-label">Operation Type</InputLabel>
                             <Select
@@ -175,8 +194,8 @@ const AddOperationDialog: React.FC<AddOperationDialogProps> = ({ title, handleCr
                     </DialogActions>
                 </form>
             </BootstrapDialog>
-        </div>
+        </>
     );
 }
 
-export default AddOperationDialog;
+export default AddOrUpdateOperationDialog;

@@ -8,14 +8,16 @@ import Paper from '@mui/material/Paper';
 import { IOperation } from '../models';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Chip } from '@mui/material';
+import AddOrUpdateOperationDialog from './AddOrUpdateOperationDialog';
 
 interface OperationsTableProps {
     operations: IOperation[];
     handleDelete: (id: number) => void;
+    handleCreateOrUpdate: (operation: IOperation) => void;
     typeFilter: string;
 }
 
-const OperationsTable: React.FC<OperationsTableProps> = ({ operations, handleDelete, typeFilter }) => {
+const OperationsTable: React.FC<OperationsTableProps> = ({ operations, handleDelete, handleCreateOrUpdate, typeFilter }) => {
     return (
         <TableContainer component={Paper} sx={{ maxWidth: 800 }}>
             <Table sx={{ minWidth: 800 }}>
@@ -46,6 +48,11 @@ const OperationsTable: React.FC<OperationsTableProps> = ({ operations, handleDel
                                 />
                             </TableCell>
                             <TableCell align="right">
+                                <AddOrUpdateOperationDialog
+                                    title="Update Operation"
+                                    handleCreateOrUpdate={handleCreateOrUpdate}
+                                    operation={filteredOperation}
+                                />
                                 <DeleteOutlineIcon
                                     color="error"
                                     style={{ 'cursor': 'pointer' }}
