@@ -6,7 +6,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const LayoutRoot = styled('div')(({ theme }) => ({
+const LayoutRoot = styled('div')(() => ({
   display: 'flex',
   flex: '1 1 auto',
   maxWidth: '100%',

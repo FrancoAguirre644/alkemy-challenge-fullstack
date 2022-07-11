@@ -11,7 +11,10 @@ export const getOperations = async (req: IReqAuth, res: Response) => {
             limit: 10,
             where: {
                 userId: req.user.id
-            }
+            },
+            order: [
+                ['createdAt', 'DESC'],
+            ],
         });
 
         return res.status(200).json({ operations });
@@ -54,8 +57,6 @@ export const updateOperation = async (req: IReqAuth, res: Response) => {
             { description, amount }, {
             where: { id: req.params.id, userId: req.user.id }
         });
-
-        console.log(operationUpdated);
 
         return res.status(200).json({ msg: 'Operation updated successfully.', operationUpdated });
 

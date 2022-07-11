@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IOperation } from "../../models";
 import * as operationService from '../../services/operationService';
-
+import { alert } from "./alertSlice";
 
 interface OperationState {
     data?: IOperation[];
@@ -23,25 +23,46 @@ export const getOperations = createAsyncThunk(
 
 export const createOperation = createAsyncThunk(
     "operations/createOperation",
-    async (operation: IOperation, { getState }) => {
-        const data = await operationService.createOperation(operation, getState().auth.access_token!);
-        return data.newOperation;
+    async (operation: IOperation, { getState, dispatch }) => {
+        try {
+            const data = await operationService.createOperation(operation, getState().auth.access_token!);
+
+            dispatch(alert({ success: data.msg }));
+
+            return data.newOperation;
+        } catch (error: any) {
+            dispatch(alert({ errors: error.response.data.msg }));
+        }
     }
 )
 
 export const updateOperation = createAsyncThunk(
     "operations/updateOperation",
-    async (operation: IOperation, { getState }) => {
-        const data = await operationService.updateOperation(operation, getState().auth.access_token!);
-        return data.operationUpdated;
+    async (operation: IOperation, { getState, dispatch }) => {
+        try {
+            const data = await operationService.updateOperation(operation, getState().auth.access_token!);
+
+            dispatch(alert({ success: data.msg }));
+
+            return data.operationUpdated;
+        } catch (error: any) {
+            dispatch(alert({ errors: error.response.data.msg }));
+        }
     }
 )
 
 export const deleteOperation = createAsyncThunk(
     "operations/deleteOperation",
-    async (id: number, { getState }) => {
-        await operationService.deleteOperation(id, getState().auth.access_token!);
-        return id;
+    async (id: number, { getState, dispatch }) => {
+        try {
+            const data = await operationService.deleteOperation(id, getState().auth.access_token!);
+
+            dispatch(alert({ success: data.msg }));
+
+            return id;
+        } catch (error: any) {
+            dispatch(alert({ errors: error.response.data.msg }));
+        }
     }
 )
 

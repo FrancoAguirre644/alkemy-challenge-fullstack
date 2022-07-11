@@ -14,7 +14,6 @@ const MENU_OPTIONS = [
   }
 ];
 
-
 const AccountPopover = () => {
 
   const { auth } = useSelector((state: RootState) => state);

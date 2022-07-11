@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IUserLogin, IUserRegister, User } from "../../models";
-import * as authService from '../../services/authService';
+import * as authService from '../../services/authService'
+import { alert } from "./alertSlice";
 
 interface AuthState {
   user?: User;
@@ -11,32 +12,43 @@ const initialState: AuthState = {};
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (payload: IUserLogin) => {
-    const data = await authService.login(payload);
-    localStorage.setItem('logged', 'true');
+  async (payload: IUserLogin, ThunkAPI) => {
+    try {
 
-    return data;
+      const data = await authService.login(payload);
+      localStorage.setItem('logged', 'true');
+
+      ThunkAPI.dispatch(alert({ success: 'Login successfully.' }));
+
+      return data;
+    } catch (error: any) {
+      ThunkAPI.dispatch(alert({ errors: error.response.data.msg }));
+    }
   }
 )
 
 export const register = createAsyncThunk(
   "auth/register",
-  async (payload: IUserRegister) => {
-    const data = await authService.register(payload);
-    localStorage.setItem('logged', 'true');
+  async (payload: IUserRegister, ThunkAPI) => {
+    try {
+      const data = await authService.register(payload);
+      localStorage.setItem('logged', 'true');
 
-    return data;
+      ThunkAPI.dispatch(alert({ success: 'Register successfully.' }));
+
+      return data;
+    } catch (error: any) {
+      ThunkAPI.dispatch(alert({ errors: error.response.data.msg }));
+    }
   }
 )
 
 export const logout = createAsyncThunk(
   "auth/logout",
-  async () => {
+  async (_, ThunkAPI) => {
     localStorage.removeItem('logged');
-    const res = await authService.refreshToken();
-
-    return res;
-
+    ThunkAPI.dispatch(alert({ success: 'Logout successfully.' }));
+    return {};
   }
 )
 
@@ -50,7 +62,7 @@ export const refreshToken = createAsyncThunk(
       return res;
     }
 
-    return {}
+    return {};
   }
 )
 

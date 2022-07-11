@@ -9,7 +9,6 @@ import { login } from "../../redux/slices/authSlice";
 import { AppDispatch } from "../../redux/store";
 import { ClientRoutes } from "../../routes/clientRoutes";
 
-
 const LoginForm = () => {
 
     const navigate = useNavigate();

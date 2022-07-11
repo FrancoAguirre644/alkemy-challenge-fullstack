@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './redux/store';
 import { getOperations } from './redux/slices/operationSlice';
 import { refreshToken } from './redux/slices/authSlice';
+import Notify from './components/alert/Notify';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
@@ -31,6 +32,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Routes />
+      <Notify />
     </ThemeProvider>
   );
 }
