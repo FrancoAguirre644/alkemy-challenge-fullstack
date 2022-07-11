@@ -46,16 +46,18 @@ export const updateOperation = async (req: IReqAuth, res: Response) => {
 
         const { description, amount } = req.body;
 
-        const movie: IOperation | null = await Operations.findByPk(req.params.id);
+        const operation: IOperation | null = await Operations.findByPk(req.params.id);
 
-        if (!movie) return res.status(400).json({ error: 'Operation not found.' });
+        if (!operation) return res.status(400).json({ error: 'Operation not found.' });
 
-        await Operations.update(
+        const operationUpdated = await operation.update(
             { description, amount }, {
             where: { id: req.params.id, userId: req.user.id }
         });
 
-        return res.status(200).json({ msg: 'Operation updated successfully.' });
+        console.log(operationUpdated);
+
+        return res.status(200).json({ msg: 'Operation updated successfully.', operationUpdated });
 
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
