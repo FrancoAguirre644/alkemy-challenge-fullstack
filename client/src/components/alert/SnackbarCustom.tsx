@@ -17,7 +17,11 @@ const SnackbarCustom: React.FC<SnackbarProps> = ({ msg, handleClose, color }) =>
 
     return (
         <Stack spacing={2} sx={{ width: '100%' }}>
-            <MuiSnackbar open={msg ? true : false} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={3000} onClose={() => handleClose()}>
+            <MuiSnackbar open={msg ? true : false} 
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} 
+                autoHideDuration={2000} 
+                onClose={() => handleClose()}
+            >
                 <Alert onClose={() => handleClose()} severity={color} sx={{ width: '100%' }}>
                     {msg}
                 </Alert>

@@ -84,16 +84,24 @@ export const authSlice = createSlice({
                 state.data = [payload, ...state.data!];
                 state.loading = false;
             })
+            .addCase(createOperation.pending, (state: OperationState) => {
+                state.loading = true;
+            })
             .addCase(updateOperation.fulfilled, (state: OperationState, { payload }) => {
-                console.log(payload)
                 state.data = state.data?.map(item =>
                     item.id === payload.id ? payload : item
                 );
                 state.loading = false;
             })
+            .addCase(updateOperation.pending, (state: OperationState) => {
+                state.loading = true;
+            })
             .addCase(deleteOperation.fulfilled, (state: OperationState, { payload }) => {
                 state.data = state.data?.filter(item => item.id !== payload);
                 state.loading = false;
+            })
+            .addCase(deleteOperation.pending, (state: OperationState) => {
+                state.loading = true;
             })
     },
 });

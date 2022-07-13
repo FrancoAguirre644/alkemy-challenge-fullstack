@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Card, CardContent, Divider, List, ListItemSecondaryAction, ListItemText, ListItemButton } from "@mui/material";
+import { Box, Button, ButtonGroup, Card, CardContent, Divider, List, ListItemSecondaryAction, ListItemText, ListItemButton, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "../components/Layout";
@@ -88,6 +88,26 @@ const HomePage: React.FC = () => {
             dispatch(createOperation(operation));
         }
     }
+
+    if (operations.loading) return (
+        <Layout>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    '& > *': {
+                        m: 1,
+                    },
+                    width: 1
+                }}
+                p={2}
+            >
+                <CircularProgress />
+            </Box>
+        </Layout>
+    )
+
 
     return (
         <Layout>
