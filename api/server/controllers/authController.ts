@@ -21,6 +21,8 @@ export const login = async (req: Request, res: Response) => {
         const refresh_token = generateRefreshToken({ id: user.id });
 
         res.cookie('refreshtoken', refresh_token, {
+            sameSite: 'none',
+            secure: true,
             httpOnly: true,
             path: '/auth/refresh-token',
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30days
@@ -56,6 +58,8 @@ export const register = async (req: Request, res: Response) => {
         const refresh_token = generateRefreshToken({ id: newUser.id });
 
         res.cookie('refreshtoken', refresh_token, {
+            sameSite: 'none',
+            secure: true,
             httpOnly: true,
             path: '/auth/refresh-token',
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30days

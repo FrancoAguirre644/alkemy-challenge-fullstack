@@ -19,8 +19,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(cors({
-    origin: true,
-    credentials: true, //access-control-allow-credentials:true
+    origin: `${process.env.BASE_URL}`,
+    credentials: true
 }));
 
 // Routes
