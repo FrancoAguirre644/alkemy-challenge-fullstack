@@ -10,7 +10,7 @@ import { getOperations } from './redux/slices/operationSlice';
 import { refreshToken } from './redux/slices/authSlice';
 import Notify from './components/alert/Notify';
 
-axios.defaults.baseURL = 'https://wallet-alkemy-fullstack.herokuapp.com';
+axios.defaults.baseURL = 'https://alkemy-challenge-fullstack.onrender.com';
 
 axios.defaults.withCredentials = true;
 
